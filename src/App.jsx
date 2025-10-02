@@ -7,13 +7,11 @@ import { DataProvider } from './DataContext'
 
 export default function App() {
     return (
-        <>
-            <DataProvider>
-                <TestSelector />
-                <InfoTable />
-                <FailedTests />
-                <DiffTable />
-            </DataProvider>
-        </>
+        <DataProvider>
+            <TestSelector />
+            <InfoTable />
+            <FailedTests />
+            <DiffTable />
+        </DataProvider>
     )
 }

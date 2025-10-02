@@ -16,19 +16,24 @@ export default function InfoTable() {
     const { data, selected, setSelected } = useData()
     const idx = data.indexOf(selected)
     const previous = idx > 0 ? data[idx - 1] : selected;
+    const d = formatDuration(selected.Duration)
+    const n = selected.Failed.length
 
     return (
-        <table>
-            <tbody>
-                <tr><td>Version</td><td>{selected.Version}</td></tr>
-                <tr><td>Test</td><td>{selected.DateTime}</td></tr>
-                <tr><td>Branch</td><td><a href={`https://github.com/rclone/rclone/tree/${selected.Branch}`}>{selected.Branch}</a></td></tr>
-                <tr><td>Commit</td><td><a href={`https://github.com/rclone/rclone/commit/${selected.Commit}`}>{selected.Commit}</a></td></tr>
-                <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>
-                <tr><td>Duration</td><td>{formatDuration(selected.Duration)}</td></tr>
-                <tr><td>Previous</td><td><a style={{ cursor: "pointer" }} onClick={() => setSelected(previous)}>{selected.Previous}</a></td></tr>
-                <tr><td>Up</td><td><a href="add">Older Tests</a></td></tr>
-            </tbody>
-        </table>
+        <>
+            <h2>{n === 0 ? "PASS" : `FAIL: ${n} tests failed in ${d}`}</h2>
+            <table>
+                <tbody>
+                    <tr><td>Version</td><td>{selected.Version}</td></tr>
+                    <tr><td>Test</td><td>{selected.DateTime}</td></tr>
+                    <tr><td>Branch</td><td><a href={`https://github.com/rclone/rclone/tree/${selected.Branch}`}>{selected.Branch}</a></td ></tr >
+                    <tr><td>Commit</td><td><a href={`https://github.com/rclone/rclone/commit/${selected.Commit}`}>{selected.Commit}</a></td></tr>
+                    <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>
+                    <tr><td>Duration</td><td>{d}</td></tr>
+                    <tr><td>Previous</td><td><a style={{ cursor: "pointer" }} onClick={() => setSelected(previous)}>{selected.Previous}</a></td></tr>
+                    <tr><td>Up</td><td><a href="add">Older Tests</a></td></tr>
+                </tbody >
+            </table >
+        </>
     )
 }
