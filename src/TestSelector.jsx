@@ -19,8 +19,8 @@ export default function TestSelector() {
         return () => window.removeEventListener("keydown", handler)
     }, [idx, data, setSelected])
 
-    const items = data.map((_, i) => ({
-        label: `${data[i].DateTime}`,
+    const items = data.map((d, i) => ({
+        label: `${d.DateTime.slice(5, 10)}`, // FIXME: MAKE THE TABS NOT JDKLF JDSKFJDLKS
         key: String(i),
     }))
 

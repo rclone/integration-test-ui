@@ -21,6 +21,7 @@ function compare(oldReport, newReport) {
 }
 
 function createtable(tests) {
+    const { selected } = useData()
     return (
         <table>
             <thead>
@@ -46,11 +47,12 @@ function createtable(tests) {
                             ))}
                         </td>
                         <td>
-                            {(item.TrialNames.map((_, idx) => (
+                            {(item.TrialNames.map((n, idx) => (
                                 <a
                                     key={idx}
-                                    href="needtoaddlink"
+                                    href={`https://pub.rclone.org/integration-tests/${selected.DateTime}/${n}`}
                                     style={{ marginRight: "0.2rem" }}
+                                    target="_blank"
                                 >
                                     #{idx}
                                 </a>

@@ -13,9 +13,7 @@ function formatDuration(ns) {
 }
 
 export default function InfoTable() {
-    const { data, selected, setSelected } = useData()
-    const idx = data.indexOf(selected)
-    const previous = idx > 0 ? data[idx - 1] : selected;
+    const { selected } = useData()
     const d = formatDuration(selected.Duration)
     const n = selected.Failed.length
 
@@ -30,8 +28,6 @@ export default function InfoTable() {
                     <tr><td>Commit</td><td><a href={`https://github.com/rclone/rclone/commit/${selected.Commit}`}>{selected.Commit}</a></td></tr>
                     <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>
                     <tr><td>Duration</td><td>{d}</td></tr>
-                    <tr><td>Previous</td><td><a style={{ cursor: "pointer" }} onClick={() => setSelected(previous)}>{selected.Previous}</a></td></tr>
-                    <tr><td>Up</td><td><a href="add">Older Tests</a></td></tr>
                 </tbody >
             </table >
         </>
