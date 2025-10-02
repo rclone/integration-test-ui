@@ -1,18 +1,19 @@
 import './App.css'
 import InfoTable from './InfoTable'
-import TestDiffTable from './TestDiffTable'
+import DiffTable from './DiffTable'
 import FailedTests from './FailedTests'
 import TestSelector from './TestSelector'
+import { DataProvider } from './DataContext'
 
-function App() {
+export default function App() {
     return (
         <>
-            <TestSelector />
-            <InfoTable />
-            <FailedTests />
-            <TestDiffTable />
+            <DataProvider>
+                <TestSelector />
+                <InfoTable />
+                <FailedTests />
+                <DiffTable />
+            </DataProvider>
         </>
     )
 }
-
-export default App

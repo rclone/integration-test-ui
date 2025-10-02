@@ -1,22 +1,34 @@
-import data from './assets/index.json'
+import { useData } from "./DataContext"
 
-const keys = ["Version", "DateTime", "Previous", "Commit", "Branch", "Duration"]
-const info = {};
-for (const k of keys) info[k] = data[k]
-info["Go"] = data["GoVersion"] + " " + data["GOOS"] + "/" + data["GOARCH"]
+function formatDuration(ns) {
+    if (ns == null) return ""
+    const seconds = ns / 1e9
+    const h = Math.floor(seconds / 3600)
+    const m = Math.floor((seconds % 3600) / 60)
+    const s = (seconds % 60).toFixed(0)
 
-function InfoTable() {
+    if (h > 0) return `${h}h ${m}m ${s}s`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+}
+
+export default function InfoTable() {
+    const { data, selected, setSelected } = useData()
+    const idx = data.indexOf(selected)
+    const previous = idx > 0 ? data[idx - 1] : selected;
+
     return (
         <table>
             <tbody>
-                {Object.entries(info).map(([k, v]) => (
-                    <tr key={k}>
-                        <td>{k}</td>
-                        <td>{v}</td>
-                    </tr>
-                ))}
+                <tr><td>Version</td><td>{selected.Version}</td></tr>
+                <tr><td>Test</td><td>{selected.DateTime}</td></tr>
+                <tr><td>Branch</td><td><a href={`https://github.com/rclone/rclone/tree/${selected.Branch}`}>{selected.Branch}</a></td></tr>
+                <tr><td>Commit</td><td><a href={`https://github.com/rclone/rclone/commit/${selected.Commit}`}>{selected.Commit}</a></td></tr>
+                <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>
+                <tr><td>Duration</td><td>{formatDuration(selected.Duration)}</td></tr>
+                <tr><td>Previous</td><td><a style={{ cursor: "pointer" }} onClick={() => setSelected(previous)}>{selected.Previous}</a></td></tr>
+                <tr><td>Up</td><td><a href="add">Older Tests</a></td></tr>
             </tbody>
         </table>
     )
 }
-export default InfoTable

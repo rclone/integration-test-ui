@@ -1,20 +1,14 @@
-// each item should be clickable, sorting only those things
-// extension: would be nice to see tick/cross on each test for the last few days to see if it passed
-// sidebar: when a header is selected, when moved to another date of testing it should stay selected
-
-import data from './assets/index.json'
 import { useState } from 'react'
+import { useData } from './DataContext'
 
-
-
-function FailedTests() {
+export default function FailedTests() {
     const [filter, setFilter] = useState();
-
     const styling = (test) => ({ cursor: "pointer", backgroundColor: test === filter ? "red" : "transparent" })
+    const { selected } = useData();
 
     return (
         <>
-            <h3>Failed Tests: {data.Failed.length}</h3>
+            <h2>Failed Tests: {selected.Failed.length}</h2>
             <p style={{ cursor: "pointer" }} onClick={() => setFilter()}>current filter: {String(filter ?? "none")}</p>
             <table>
                 <thead>
@@ -28,7 +22,7 @@ function FailedTests() {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.Failed.filter((item) => filter
+                    {selected.Failed.filter((item) => filter
                         ? item.Backend === filter || item.Remote === filter || item.Path === filter || item.FastList === filter
                         || (item.FailedTests ?? []).includes(filter)
                         : true).map((item, i) => (
@@ -42,7 +36,17 @@ function FailedTests() {
                                         <div key={idx} style={styling(test)} onClick={() => setFilter(test)}>{test}</div>
                                     ))}
                                 </td>
-                                <td>{item.TrialNames}</td>
+                                <td>
+                                    {(item.TrialNames.map((_, idx) => (
+                                        <a
+                                            key={idx}
+                                            href="needtoaddlink"
+                                            style={{ marginRight: "0.2rem" }}
+                                        >
+                                            #{idx}
+                                        </a>
+                                    )))}
+                                </td>
                             </tr>
                         ))}
                 </tbody>
@@ -50,4 +54,3 @@ function FailedTests() {
         </>
     )
 }
-export default FailedTests
