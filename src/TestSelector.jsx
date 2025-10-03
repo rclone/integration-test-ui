@@ -20,7 +20,7 @@ export default function TestSelector() {
     }, [idx, data, setSelected])
 
     const items = data.map((d, i) => ({
-        label: `${d.DateTime.slice(5, 10)}`, // FIXME: MAKE THE TABS NOT JDKLF JDSKFJDLKS
+        label: `${d.DateTime.slice(5, 10)}`, // TODO: add day
         key: String(i),
     }))
 
@@ -37,9 +37,11 @@ export default function TestSelector() {
             <Tabs
                 tabPosition="top"
                 type="scrollable"
+                tabBarGutter={10}
                 items={items}
                 activeKey={String(data.indexOf(selected))}
                 onChange={(key) => setSelected(data[Number(key)])}
+                style={{ width: "100%" }}
             />
         </ConfigProvider>
     )
