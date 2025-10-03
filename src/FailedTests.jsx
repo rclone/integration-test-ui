@@ -13,6 +13,10 @@ export default function FailedTests() {
         || (item.FailedTests ?? []).includes(filter)
         : true)
 
+    const toggleFilter = v => {
+        setFilter(prev => prev === v ? null : v)
+    }
+
     return (
         <>
             <h2>Failed Tests: {filtered.length}</h2>
@@ -36,13 +40,13 @@ export default function FailedTests() {
                 <tbody>
                     {filtered.map((item, i) => (
                         <tr key={i}>
-                            <td style={styling(item.Backend)} onClick={() => setFilter(item.Backend)}>{item.Backend}</td>
-                            <td style={styling(item.Remote)} onClick={() => setFilter(item.Remote)}>{item.Remote}</td>
-                            <td style={styling(item.Path)} onClick={() => setFilter(item.Path)}>{item.Path}</td>
-                            <td style={styling(item.FastList)} onClick={() => setFilter(item.FastList)}>{String(item.FastList)}</td>
+                            <td style={styling(item.Backend)} onClick={() => toggleFilter(item.Backend)}>{item.Backend}</td>
+                            <td style={styling(item.Remote)} onClick={() => toggleFilter(item.Remote)}>{item.Remote}</td>
+                            <td style={styling(item.Path)} onClick={() => toggleFilter(item.Path)}>{item.Path}</td>
+                            <td style={styling(item.FastList)} onClick={() => toggleFilter(item.FastList)}>{String(item.FastList)}</td>
                             <td>
                                 {(item.FailedTests ?? []).map((test, idx) => (
-                                    <div key={idx} style={styling(test)} onClick={() => setFilter(test)}>{test}</div>
+                                    <div key={idx} style={styling(test)} onClick={() => toggleFilter(test)}>{test}</div>
                                 ))}
                             </td>
                             <td>

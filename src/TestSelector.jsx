@@ -20,7 +20,7 @@ export default function TestSelector() {
     }, [idx, data, setSelected])
 
     const items = data.map((d, i) => ({
-        label: `${d.DateTime.slice(5, 10)}`, // TODO: add day
+        label: `${d.DateTime.slice(5, 10)}`,
         key: String(i),
     }))
 

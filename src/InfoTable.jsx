@@ -25,7 +25,7 @@ export default function InfoTable() {
                     <tr><td>Version</td><td>{selected.Version}</td></tr>
                     <tr><td>Test</td><td>{selected.DateTime}</td></tr>
                     <tr><td>Branch</td><td><a href={`https://github.com/rclone/rclone/tree/${selected.Branch}`}>{selected.Branch}</a></td ></tr >
-                    <tr><td>Commit</td><td><a href={`https://github.com/rclone/rclone/commit/${selected.Commit}`}>{selected.Commit}</a></td></tr>
+                    <tr><td>Commit</td><td>{selected.Commit ? <a href={`https://github.com/rclone/rclone/commit/${selected.Commit}`}>{selected.Commit}</a> : "NO COMMIT LISTED"}</td></tr>
                     <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>
                     <tr><td>Duration</td><td>{d}</td></tr>
                 </tbody >
