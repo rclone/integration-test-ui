@@ -1,5 +1,7 @@
 import { useData } from "./DataContext"
 
+const URL = "https://github.com/rclone/rclone/"
+
 function formatDuration(ns) {
     if (ns == null) return ""
     const seconds = ns / 1e9
@@ -12,6 +14,7 @@ function formatDuration(ns) {
     return `${s}s`;
 }
 
+// display general information about the report
 export default function InfoTable() {
     const { selected } = useData()
     const d = formatDuration(selected.Duration)
@@ -24,8 +27,8 @@ export default function InfoTable() {
                 <tbody>
                     <tr><td>Version</td><td>{selected.Version}</td></tr>
                     <tr><td>Test</td><td>{selected.DateTime}</td></tr>
-                    <tr><td>Branch</td><td><a href={`https://github.com/rclone/rclone/tree/${selected.Branch}`}>{selected.Branch}</a></td ></tr >
-                    <tr><td>Commit</td><td>{selected.Commit ? <a href={`https://github.com/rclone/rclone/commit/${selected.Commit}`}>{selected.Commit}</a> : "NO COMMIT LISTED"}</td></tr>
+                    <tr><td>Branch</td><td><a href={`${URL}tree/${selected.Branch}`}>{selected.Branch}</a></td ></tr >
+                    <tr><td>Commit</td><td>{selected.Commit ? <a href={`${URL}commit/${selected.Commit}`}>{selected.Commit}</a> : "NO COMMIT LISTED"}</td></tr>
                     <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>
                     <tr><td>Duration</td><td>{d}</td></tr>
                 </tbody >

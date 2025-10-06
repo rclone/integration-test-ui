@@ -2,6 +2,7 @@ import { ConfigProvider, Tabs } from 'antd';
 import { useData } from './DataContext'
 import { useEffect } from 'react'
 
+// top par allowing scrolling through tests with arrow keys
 export default function TestSelector() {
     const { data, selected, setSelected } = useData()
     const idx = data.indexOf(selected)
@@ -26,6 +27,7 @@ export default function TestSelector() {
 
     return (
         <ConfigProvider
+            // set text colour for tabs
             theme={{
                 components: {
                     Tabs: {
@@ -39,7 +41,7 @@ export default function TestSelector() {
                 type="scrollable"
                 tabBarGutter={10}
                 items={items}
-                activeKey={String(data.indexOf(selected))}
+                activeKey={String(idx)}
                 onChange={(key) => setSelected(data[Number(key)])}
                 style={{ width: "100%" }}
             />

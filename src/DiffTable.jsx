@@ -1,14 +1,17 @@
 import { useData } from "./DataContext";
 import { useMemo } from 'react'
 
+// make unique key for each test
 function key(t) {
     return `${t.Backend}|${t.Path}|${t.Remote}`
 }
 
+// get a map of failed tests
 function failedSet(report) {
     return new Map((report.Failed || []).map(t => [key(t), t]));
 }
 
+// compare current and previous test
 function compare(oldReport, newReport) {
     const oldF = failedSet(oldReport)
     const newF = failedSet(newReport)
@@ -20,7 +23,7 @@ function compare(oldReport, newReport) {
     return { regressed, fixed, continued }
 }
 
-function createtable(tests) {
+function createTable(tests) {
     const { selected } = useData()
     return (
         <table>
@@ -66,6 +69,7 @@ function createtable(tests) {
     )
 }
 
+// create the tables for each difference
 export default function DiffTable() {
     const { data, selected } = useData()
 
@@ -80,11 +84,11 @@ export default function DiffTable() {
     return (
         <>
             <h2>Regressed Tests</h2>
-            {createtable(regressed)}
+            {createTable(regressed)}
             <h2>Continued Failed Tests</h2>
-            {createtable(continued)}
+            {createTable(continued)}
             <h2>Fixed Tests</h2>
-            {createtable(fixed)}
+            {createTable(fixed)}
         </>
     )
 }

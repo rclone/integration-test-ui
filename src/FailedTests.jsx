@@ -1,18 +1,12 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import { useData } from './DataContext'
 
-const parseFilter = v => {
-    if (v === null) return null
-    if (v === "true") return true
-    if (v === "false") return false
-    return v;
-}
-
+// component to display and allow filtering of failed tests
 export default function FailedTests() {
-    const [filter, setFilter] = useState(null);
+    const [filter, setFilter] = useState("");
     const { data, selected, setSelected } = useData();
     const [ready, setReady] = useState(false)
-    const styling = (test) => ({ cursor: "pointer", backgroundColor: test === filter ? "red" : "transparent" })
+    const styling = (test) => (test === filter ? "selected" : "unselected")
 
     useLayoutEffect(() => {
         // set filter and selected from URL
@@ -22,7 +16,7 @@ export default function FailedTests() {
         const f = params.get("filter")
         const d = params.get("date")
 
-        setFilter(parseFilter(f))
+        if (f !== null) setFilter(f)
         if (d !== null) {
             const match = data.find(t => String(t.DateTime) === d)
             if (match) setSelected(match)
@@ -36,9 +30,11 @@ export default function FailedTests() {
         if (!ready) return
 
         const params = new URLSearchParams(window.location.search)
-        if (filter !== null && filter !== undefined) {
-            params.set("filter", String(filter))
-        } else params.delete("filter")
+        if (filter) {
+            params.set("filter", filter)
+        } else {
+            params.delete("filter")
+        }
         if (selected?.DateTime) params.set("date", String(selected.DateTime)); else params.delete("date")
 
         const qs = params.toString()
@@ -47,24 +43,23 @@ export default function FailedTests() {
         if (newURL !== oldURL) window.history.replaceState(null, "", newURL)
     }, [filter, selected])
 
-    selected.Failed.map((t) => (
-        t.FailedTests ??= ["DID NOT COMPLETE"]
-    ))
+    selected.Failed.map((t) => (t.FailedTests ??= ["DID NOT COMPLETE"]))
+    // create map of filtered tests
     const filtered = selected.Failed.filter((item) => filter
-        ? item.Backend === filter || item.Remote === filter || item.Path === filter || item.FastList === filter
+        ? item.Backend === filter || item.Remote === filter || item.Path === filter || String(item.FastList) === filter
         || (item.FailedTests ?? []).includes(filter)
         : true)
 
     const toggleFilter = v => {
-        setFilter(prev => prev === v ? null : v)
+        setFilter(prev => prev === v ? "" : v)
     }
 
     return (
         <>
             <h2>Failed Tests: {filtered.length}</h2>
-            <p style={{ cursor: "pointer" }} onClick={() => setFilter(null)}>
+            <p className="unselected" onClick={() => setFilter("")}>
                 current filter:
-                <span style={{ backgroundColor: filter !== null ? "red" : "transparent" }}>
+                <span className={filter ? "selected" : ""}>
                     {" " + String(filter ?? "none")}
                 </span>
             </p>
@@ -82,13 +77,14 @@ export default function FailedTests() {
                 <tbody>
                     {filtered.map((item, i) => (
                         <tr key={i}>
-                            <td style={styling(item.Backend)} onClick={() => toggleFilter(item.Backend)}>{item.Backend}</td>
-                            <td style={styling(item.Remote)} onClick={() => toggleFilter(item.Remote)}>{item.Remote}</td>
-                            <td style={styling(item.Path)} onClick={() => toggleFilter(item.Path)}>{item.Path}</td>
-                            <td style={styling(item.FastList)} onClick={() => toggleFilter(item.FastList)}>{String(item.FastList)}</td>
+                            <td className={styling(item.Backend)} onClick={() => toggleFilter(item.Backend)}>{item.Backend}</td>
+                            <td className={styling(item.Remote)} onClick={() => toggleFilter(item.Remote)}>{item.Remote}</td>
+                            <td className={styling(item.Path)} onClick={() => toggleFilter(item.Path)}>{item.Path}</td>
+                            <td className={styling(String(item.FastList))} onClick={() => toggleFilter(String(item.FastList))}>{String(item.FastList)}</td>
                             <td>
+                                {/* make each failed test filterable */}
                                 {(item.FailedTests ?? []).map((test, idx) => (
-                                    <div key={idx} style={styling(test)} onClick={() => toggleFilter(test)}>{test}</div>
+                                    <div key={idx} className={styling(test)} onClick={() => toggleFilter(test)}>{test}</div>
                                 ))}
                             </td>
                             <td>
