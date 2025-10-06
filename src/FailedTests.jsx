@@ -60,7 +60,7 @@ export default function FailedTests() {
             <p className="unselected" onClick={() => setFilter("")}>
                 current filter:
                 <span className={filter ? "selected" : ""}>
-                    {" " + String(filter ?? "none")}
+                    {filter !== "" ? " " + filter : " none"}
                 </span>
             </p>
             <table>
