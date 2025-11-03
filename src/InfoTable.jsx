@@ -19,10 +19,11 @@ export default function InfoTable() {
     const { selected } = useData()
     const d = formatDuration(selected.Duration)
     const n = selected.Failed.length
+    const p = selected.Passed.length
 
     return (
         <>
-            <h2>{n === 0 ? "PASS" : `FAIL: ${n} tests failed in ${d}`}</h2>
+            <h2>{n === 0 ? "PASS" : `FAIL: ${n} tests failed and ${p} passed in ${d}`}</h2>
             <table>
                 <tbody>
                     <tr><td>Version</td><td>{selected.Version}</td></tr>
