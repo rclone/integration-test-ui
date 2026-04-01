@@ -45,7 +45,6 @@ export default function FailedTests() {
     if (!data || !selected) return null
 
     const failed = selected.Failed || []
-    failed.forEach((t) => (t.FailedTests ??= ["DID NOT COMPLETE"]))
 
     return (
         <>

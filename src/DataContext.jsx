@@ -46,6 +46,13 @@ export function DataProvider({ children }) {
                     })
                 )).filter(Boolean)
 
+                // fill in missing FailedTests so components don't have to
+                for (const r of results) {
+                    for (const t of (r.Failed || [])) {
+                        t.FailedTests ??= ["DID NOT COMPLETE"]
+                    }
+                }
+
                 setData(results)
                 if (results.length > 0) setSelected(results[results.length - 1])
             } finally {
