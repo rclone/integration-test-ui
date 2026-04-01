@@ -23,6 +23,7 @@ export function DataProvider({ children }) {
     const [selected, setSelected] = useState()
     const [data, setData] = useState()
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
     const [progress, setProgress] = useState({ done: 0, total: 0 })
     const [filter, setFilter] = useState("")
     const toggleFilter = useCallback(v => setFilter(prev => prev === v ? "" : v), [])
@@ -33,7 +34,10 @@ export function DataProvider({ children }) {
             setLoading(true)
             try {
                 const listing = await getListing(URL)
-                if (!listing) return
+                if (!listing) {
+                    setError("Failed to load test listing from " + URL)
+                    return
+                }
                 const tests = listing.filter(item => item.name.startsWith("20"))
                 setProgress({ done: 0, total: tests.length })
 
@@ -53,8 +57,13 @@ export function DataProvider({ children }) {
                     }
                 }
 
+                if (results.length === 0) {
+                    setError("No test data could be loaded")
+                    return
+                }
+
                 setData(results)
-                if (results.length > 0) setSelected(results[results.length - 1])
+                setSelected(results[results.length - 1])
             } finally {
                 setLoading(false)
             }
@@ -63,6 +72,13 @@ export function DataProvider({ children }) {
 
     const value = useMemo(() => ({ data, selected, setSelected, loading, progress, filter, setFilter, toggleFilter }), [data, selected, loading, progress, filter, toggleFilter])
 
+    if (!loading && error) {
+        return (
+            <div style={{ padding: 16, fontFamily: "sans-serif", color: "#c00" }}>
+                {error}
+            </div>
+        );
+    }
     if (loading) {
         // loading bar
         const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
