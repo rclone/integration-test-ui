@@ -17,7 +17,7 @@ export default function PassedTests() {
                     {visible ? "hide" : "show"}
                 </span>
             </h2>
-            {visible && <TestTable tests={passed} />}
+            {visible && <TestTable tests={passed} variant="passed" />}
         </>
     )
 }

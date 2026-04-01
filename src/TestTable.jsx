@@ -7,13 +7,13 @@ function matchesFilter(item, filter) {
         || (item.FailedTests ?? []).includes(filter)
 }
 
-export default function TestTable({ tests }) {
+export default function TestTable({ tests, variant }) {
     const { selected, filter, toggleFilter } = useData()
     const styling = (value) => (filter && value === filter ? "selected" : "unselected")
     const filtered = filter ? tests.filter(item => matchesFilter(item, filter)) : tests
 
     return (
-        <table>
+        <table className={variant ? `table-${variant}` : ""}>
             <thead>
                 <tr>
                     <th>Backend</th>

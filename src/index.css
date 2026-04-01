@@ -91,6 +91,23 @@ table {
     background: #264653;
     color: #ffffff;
   }
+  .table-failed th    { background: #8b2020; }
+  .table-regressed th { background: #6b2050; }
+  .table-continued th { background: #7a4a00; }
+  .table-fixed th     { background: #1a6b3a; }
+  .table-passed th    { background: #1a5a6b; }
+
+  .table-failed td    { background: #fde8e8; }
+  .table-regressed td { background: #f5e0f0; }
+  .table-continued td { background: #fef3e0; }
+  .table-fixed td     { background: #e0f5e8; }
+  .table-passed td    { background: #e0f0f5; }
+
+  .table-failed tr:nth-child(even) td    { background: #f9d0d0; }
+  .table-regressed tr:nth-child(even) td { background: #ecd0e6; }
+  .table-continued tr:nth-child(even) td { background: #f5e6c8; }
+  .table-fixed tr:nth-child(even) td     { background: #c8ebd5; }
+  .table-passed tr:nth-child(even) td    { background: #c8e2ec; }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -105,6 +122,23 @@ table {
     background: #264653;
     color: #ffffff;
   }
+  .table-failed th    { background: #5c1a1a; }
+  .table-regressed th { background: #4a1a3a; }
+  .table-continued th { background: #4a3200; }
+  .table-fixed th     { background: #1a4a2a; }
+  .table-passed th    { background: #1a3a4a; }
+
+  .table-failed td    { background: #3a2020; }
+  .table-regressed td { background: #352030; }
+  .table-continued td { background: #352a18; }
+  .table-fixed td     { background: #1e3525; }
+  .table-passed td    { background: #1e2e35; }
+
+  .table-failed tr:nth-child(even) td    { background: #4a2828; }
+  .table-regressed tr:nth-child(even) td { background: #42283a; }
+  .table-continued tr:nth-child(even) td { background: #423520; }
+  .table-fixed tr:nth-child(even) td     { background: #28422e; }
+  .table-passed tr:nth-child(even) td    { background: #283a42; }
 }
 
 .selected {

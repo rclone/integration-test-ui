@@ -56,7 +56,7 @@ export default function FailedTests() {
                     {filter !== "" ? " " + filter : " none"}
                 </span>
             </p>
-            <TestTable tests={failed} />
+            <TestTable tests={failed} variant="failed" />
         </>
     )
 }

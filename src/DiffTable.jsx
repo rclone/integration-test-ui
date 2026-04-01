@@ -1,6 +1,6 @@
 import { useData } from "./DataContext";
 import { useMemo } from 'react'
-import ExpandableList from './ExpandableList'
+import TestTable from './TestTable'
 
 // make unique key for each test
 function key(t) {
@@ -24,55 +24,6 @@ function compare(oldReport, newReport) {
     return { regressed, fixed, continued }
 }
 
-function CreateTable({ tests }) {
-    const { selected } = useData()
-    return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Backend</th>
-                    <th>Remote</th>
-                    <th>Test</th>
-                    <th>FastList</th>
-                    <th>Failed</th>
-                    <th>Logs</th>
-                </tr>
-            </thead>
-            <tbody>
-                {tests.map((item, i) => (
-                    <tr key={i}>
-                        <td>{item.Backend}</td>
-                        <td>{item.Remote}</td>
-                        <td>{item.Path}</td>
-                        <td>{String(item.FastList)}</td>
-                        <td>
-                            <ExpandableList
-                                items={item.FailTests ?? []}
-                                renderItem={(test, idx) => (
-                                    <div key={idx}>{test}</div>
-                                )}
-                            />
-                        </td>
-                        <td>
-                            {(item.TrialNames.map((n, idx) => (
-                                <a
-                                    key={idx}
-                                    href={`https://pub.rclone.org/integration-tests/${selected.DateTime}/${n}`}
-                                    style={{ marginRight: "0.2rem" }}
-                                    target="_blank"
-                                >
-                                    #{idx}
-                                </a>
-                            )))}
-                        </td>
-                    </tr>
-                ))}
-
-            </tbody>
-        </table>
-    )
-}
-
 // create the tables for each difference
 export default function DiffTable() {
     const { data, selected } = useData()
@@ -91,11 +42,11 @@ export default function DiffTable() {
     return (
         <>
             <h2>Regressed Tests</h2>
-            <CreateTable tests={regressed} />
+            <TestTable tests={regressed} variant="regressed" />
             <h2>Continued Failed Tests</h2>
-            <CreateTable tests={continued} />
+            <TestTable tests={continued} variant="continued" />
             <h2>Fixed Tests</h2>
-            <CreateTable tests={fixed} />
+            <TestTable tests={fixed} variant="fixed" />
         </>
     )
 }
