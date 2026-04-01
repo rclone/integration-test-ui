@@ -27,10 +27,10 @@ export default function TestTable({ tests, variant }) {
             <tbody>
                 {filtered.map((item, i) => (
                     <tr key={i}>
-                        <td className={styling(item.Backend)} onClick={() => toggleFilter(item.Backend)}>{item.Backend}</td>
-                        <td className={styling(item.Remote)} onClick={() => toggleFilter(item.Remote)}>{item.Remote}</td>
-                        <td className={styling(item.Path)} onClick={() => toggleFilter(item.Path)}>{item.Path}</td>
-                        <td className={styling(String(item.FastList))} onClick={() => toggleFilter(String(item.FastList))}>{String(item.FastList)}</td>
+                        <td onClick={() => toggleFilter(item.Backend)}><span className={styling(item.Backend)}>{item.Backend}</span></td>
+                        <td onClick={() => toggleFilter(item.Remote)}><span className={styling(item.Remote)}>{item.Remote}</span></td>
+                        <td onClick={() => toggleFilter(item.Path)}><span className={styling(item.Path)}>{item.Path}</span></td>
+                        <td onClick={() => toggleFilter(String(item.FastList))}><span className={styling(String(item.FastList))}>{String(item.FastList)}</span></td>
                         <td>
                             <ExpandableList
                                 items={item.FailedTests ?? []}
