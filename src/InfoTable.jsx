@@ -27,14 +27,14 @@ export default function InfoTable() {
             <h2>{n === 0 ? "PASS" : `FAIL: ${n} tests failed and ${p} passed in ${d}`}</h2>
             <table>
                 <tbody>
-                    <tr><td>Version</td><td>{selected.Version}</td></tr>
+                    {selected.Version && <tr><td>Version</td><td>{selected.Version}</td></tr>}
                     <tr><td>Test</td><td>{selected.DateTime}</td></tr>
-                    <tr><td>Branch</td><td><a href={`${URL}tree/${selected.Branch}`}>{selected.Branch}</a></td ></tr >
-                    <tr><td>Commit</td><td>{selected.Commit ? <a href={`${URL}commit/${selected.Commit}`}>{selected.Commit}</a> : "NO COMMIT LISTED"}</td></tr>
-                    <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>
+                    {selected.Branch && <tr><td>Branch</td><td><a href={`${URL}tree/${selected.Branch}`}>{selected.Branch}</a></td></tr>}
+                    {selected.Commit && <tr><td>Commit</td><td><a href={`${URL}commit/${selected.Commit}`}>{selected.Commit}</a></td></tr>}
+                    {selected.GoVersion && <tr><td>Go</td><td>{`${selected.GoVersion} ${selected.GOOS}/${selected.GOARCH}`}</td></tr>}
                     <tr><td>Duration</td><td>{d}</td></tr>
-                </tbody >
-            </table >
+                </tbody>
+            </table>
         </>
     )
 }
