@@ -21,7 +21,7 @@ export default function FailedTests() {
             if (match) setSelected(match)
         }
 
-        setReady(true)
+        setReady(true) // eslint-disable-line react-hooks/set-state-in-effect -- gates URL-sync effect below
     }, [data, setSelected, setFilter])
 
     useEffect(() => {
