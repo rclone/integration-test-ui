@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 
 const DataContext = createContext();
 const URL = "https://pub.rclone.org/integration-tests/"
@@ -24,6 +24,8 @@ export function DataProvider({ children }) {
     const [data, setData] = useState()
     const [loading, setLoading] = useState(true)
     const [progress, setProgress] = useState({ done: 0, total: 0 })
+    const [filter, setFilter] = useState("")
+    const toggleFilter = useCallback(v => setFilter(prev => prev === v ? "" : v), [])
 
     // fetch json test data from subdirectories in listing
     useEffect(() => {
@@ -37,7 +39,8 @@ export function DataProvider({ children }) {
 
                 const results = (await Promise.all(
                     tests.map(async t => {
-                        const d = await getListing(`${URL}${t.name}/index.json`)
+                        const name = t.name.replace(/\/+$/, "")
+                        const d = await getListing(`${URL}${name}/index.json`)
                         setProgress(p => ({ ...p, done: p.done + 1 }))
                         return d
                     })
@@ -51,7 +54,7 @@ export function DataProvider({ children }) {
         })()
     }, [])
 
-    const value = useMemo(() => ({ data, selected, setSelected, loading, progress }), [data, selected, loading, progress])
+    const value = useMemo(() => ({ data, selected, setSelected, loading, progress, filter, setFilter, toggleFilter }), [data, selected, loading, progress, filter, toggleFilter])
 
     if (loading) {
         // loading bar
