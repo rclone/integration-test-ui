@@ -62,7 +62,7 @@ export function DataProvider({ children }) {
     return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 }
 
-// function for getting data from context
+// eslint-disable-next-line react-refresh/only-export-components
 export function useData() {
     return useContext(DataContext)
 }

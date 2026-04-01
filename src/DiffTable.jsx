@@ -23,7 +23,7 @@ function compare(oldReport, newReport) {
     return { regressed, fixed, continued }
 }
 
-function createTable(tests) {
+function CreateTable({ tests }) {
     const { selected } = useData()
     return (
         <table>
@@ -84,11 +84,11 @@ export default function DiffTable() {
     return (
         <>
             <h2>Regressed Tests</h2>
-            {createTable(regressed)}
+            <CreateTable tests={regressed} />
             <h2>Continued Failed Tests</h2>
-            {createTable(continued)}
+            <CreateTable tests={continued} />
             <h2>Fixed Tests</h2>
-            {createTable(fixed)}
+            <CreateTable tests={fixed} />
         </>
     )
 }

@@ -23,7 +23,7 @@ export default function FailedTests() {
         }
 
         setReady(true)
-    }, [data])
+    }, [data, setSelected])
 
     useEffect(() => {
         // changes url based on filter and selected
@@ -41,7 +41,7 @@ export default function FailedTests() {
         const newURL = `${window.location.pathname}${qs ? `?${qs}` : ""}`
         const oldURL = `${window.location.pathname}${window.location.search}`
         if (newURL !== oldURL) window.history.replaceState(null, "", newURL)
-    }, [filter, selected])
+    }, [filter, selected, ready])
 
     selected.Failed.map((t) => (t.FailedTests ??= ["DID NOT COMPLETE"]))
     // create map of filtered tests
