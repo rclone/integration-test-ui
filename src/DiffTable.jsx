@@ -41,11 +41,11 @@ export default function DiffTable() {
 
     return (
         <>
-            <h2>Regressed Tests</h2>
+            <h2>Regressed Tests: {regressed.length}</h2>
             <TestTable tests={regressed} variant="regressed" />
-            <h2>Continued Failed Tests</h2>
+            <h2>Continued Failed Tests: {continued.length}</h2>
             <TestTable tests={continued} variant="continued" />
-            <h2>Fixed Tests</h2>
+            <h2>Fixed Tests: {fixed.length}</h2>
             <TestTable tests={fixed} variant="fixed" />
         </>
     )
