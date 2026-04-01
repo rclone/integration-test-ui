@@ -9,7 +9,7 @@ function matchesFilter(item, filter) {
 
 export default function TestTable({ tests }) {
     const { selected, filter, toggleFilter } = useData()
-    const styling = (value) => (value === filter ? "selected" : "unselected")
+    const styling = (value) => (filter && value === filter ? "selected" : "unselected")
     const filtered = filter ? tests.filter(item => matchesFilter(item, filter)) : tests
 
     return (
