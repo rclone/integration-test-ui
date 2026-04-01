@@ -43,9 +43,11 @@ export default function FailedTests() {
         if (newURL !== oldURL) window.history.replaceState(null, "", newURL)
     }, [filter, selected, ready])
 
-    selected.Failed.map((t) => (t.FailedTests ??= ["DID NOT COMPLETE"]))
+    if (!data || !selected) return null
+
+    ;(selected.Failed || []).map((t) => (t.FailedTests ??= ["DID NOT COMPLETE"]))
     // create map of filtered tests
-    const filtered = selected.Failed.filter((item) => filter
+    const filtered = (selected.Failed || []).filter((item) => filter
         ? item.Backend === filter || item.Remote === filter || item.Path === filter || String(item.FastList) === filter
         || (item.FailedTests ?? []).includes(filter)
         : true)

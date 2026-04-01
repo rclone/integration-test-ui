@@ -17,9 +17,10 @@ function formatDuration(ns) {
 // display general information about the report
 export default function InfoTable() {
     const { selected } = useData()
+    if (!selected) return null
     const d = formatDuration(selected.Duration)
-    const n = selected.Failed.length
-    const p = selected.Passed.length
+    const n = (selected.Failed || []).length
+    const p = (selected.Passed || []).length
 
     return (
         <>

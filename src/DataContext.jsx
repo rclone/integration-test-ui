@@ -4,13 +4,18 @@ const DataContext = createContext();
 const URL = "https://pub.rclone.org/integration-tests/"
 
 // fetch the integration test directory listing
+// Returns null if the fetch fails (e.g. 404 for incomplete uploads)
 async function getListing(url) {
-    const res = await fetch(url, {
-        headers: { Accept: "application/json" },
-        mode: "cors",
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
+    try {
+        const res = await fetch(url, {
+            headers: { Accept: "application/json" },
+            mode: "cors",
+        });
+        if (!res.ok) return null;
+        return res.json();
+    } catch {
+        return null;
+    }
 }
 
 // create DataProvider component to give children access to data
@@ -26,19 +31,20 @@ export function DataProvider({ children }) {
             setLoading(true)
             try {
                 const listing = await getListing(URL)
+                if (!listing) return
                 const tests = listing.filter(item => item.name.startsWith("20"))
                 setProgress({ done: 0, total: tests.length })
 
-                const results = await Promise.all(
+                const results = (await Promise.all(
                     tests.map(async t => {
                         const d = await getListing(`${URL}${t.name}/index.json`)
                         setProgress(p => ({ ...p, done: p.done + 1 }))
                         return d
                     })
-                )
+                )).filter(Boolean)
 
                 setData(results)
-                setSelected(results[results.length - 1])
+                if (results.length > 0) setSelected(results[results.length - 1])
             } finally {
                 setLoading(false)
             }

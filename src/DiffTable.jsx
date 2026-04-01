@@ -75,11 +75,14 @@ export default function DiffTable() {
 
     // only calculate on data or selected change
     const { regressed, fixed, continued } = useMemo(() => {
+        if (!data || !selected) return { regressed: [], fixed: [], continued: [] };
         const idx = data.indexOf(selected)
         const previous = idx > 0 ? data[idx - 1] : null;
-        if (!previous || !selected) return { regressed: [], fixed: [], continued: [] };
+        if (!previous) return { regressed: [], fixed: [], continued: [] };
         return compare(previous, selected)
     }, [data, selected])
+
+    if (!data || !selected) return null
 
     return (
         <>

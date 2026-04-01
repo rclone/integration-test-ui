@@ -5,9 +5,10 @@ import { useEffect } from 'react'
 // top par allowing scrolling through tests with arrow keys
 export default function TestSelector() {
     const { data, selected, setSelected } = useData()
-    const idx = data.indexOf(selected)
+    const idx = data ? data.indexOf(selected) : -1
 
     useEffect(() => {
+        if (!data || !selected) return
         const handler = (e) => {
             if (e.key === "ArrowRight") {
                 setSelected(data[(idx + 1) % data.length])
@@ -18,7 +19,9 @@ export default function TestSelector() {
         }
         window.addEventListener("keydown", handler)
         return () => window.removeEventListener("keydown", handler)
-    }, [idx, data, setSelected])
+    }, [idx, data, selected, setSelected])
+
+    if (!data || !selected) return null
 
     const items = data.map((d, i) => ({
         label: `${d.DateTime.slice(5, 10)}`,
