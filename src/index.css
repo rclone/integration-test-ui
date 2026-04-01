@@ -116,6 +116,17 @@ table {
     cursor: pointer;
 }
 
+.expand-more {
+    cursor: pointer;
+    color: #646cff;
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-top: 2px;
+}
+.expand-more:hover {
+    text-decoration: underline;
+}
+
 .help-container {
   position: fixed;
   top: 0px;

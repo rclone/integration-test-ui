@@ -1,5 +1,6 @@
 import { useData } from "./DataContext";
 import { useMemo } from 'react'
+import ExpandableList from './ExpandableList'
 
 // make unique key for each test
 function key(t) {
@@ -45,9 +46,12 @@ function CreateTable({ tests }) {
                         <td>{item.Path}</td>
                         <td>{String(item.FastList)}</td>
                         <td>
-                            {(item.FailTests ?? []).map((test, idx) => (
-                                <div key={idx}>{test}</div>
-                            ))}
+                            <ExpandableList
+                                items={item.FailTests ?? []}
+                                renderItem={(test, idx) => (
+                                    <div key={idx}>{test}</div>
+                                )}
+                            />
                         </td>
                         <td>
                             {(item.TrialNames.map((n, idx) => (

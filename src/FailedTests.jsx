@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import { useData } from './DataContext'
+import ExpandableList from './ExpandableList'
 
 // component to display and allow filtering of failed tests
 export default function FailedTests() {
@@ -85,9 +86,12 @@ export default function FailedTests() {
                             <td className={styling(String(item.FastList))} onClick={() => toggleFilter(String(item.FastList))}>{String(item.FastList)}</td>
                             <td>
                                 {/* make each failed test filterable */}
-                                {(item.FailedTests ?? []).map((test, idx) => (
-                                    <div key={idx} className={styling(test)} onClick={() => toggleFilter(test)}>{test}</div>
-                                ))}
+                                <ExpandableList
+                                    items={item.FailedTests ?? []}
+                                    renderItem={(test, idx) => (
+                                        <div key={idx} className={styling(test)} onClick={() => toggleFilter(test)}>{test}</div>
+                                    )}
+                                />
                             </td>
                             <td>
                                 {(item.TrialNames.map((n, idx) => (
