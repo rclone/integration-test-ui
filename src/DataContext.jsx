@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useMemo, useCallback } 
 
 const DataContext = createContext();
 const URL = "https://pub.rclone.org/integration-tests/"
+const BACKENDS_URL = "https://tip.rclone.org/backends/index.json"
 
 // fetch the integration test directory listing
 // Returns null if the fetch fails (e.g. 404 for incomplete uploads)
@@ -27,6 +28,7 @@ export function DataProvider({ children }) {
     const [progress, setProgress] = useState({ done: 0, total: 0 })
     const [filter, setFilter] = useState("")
     const toggleFilter = useCallback(v => setFilter(prev => prev === v ? "" : v), [])
+    const [backends, setBackends] = useState(null)
 
     // fetch json test data from subdirectories in listing
     useEffect(() => {
@@ -70,7 +72,24 @@ export function DataProvider({ children }) {
         })()
     }, [])
 
-    const value = useMemo(() => ({ data, selected, setSelected, loading, progress, filter, setFilter, toggleFilter }), [data, selected, loading, progress, filter, toggleFilter])
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await fetch(BACKENDS_URL)
+                if (!res.ok) return
+                const data = await res.json()
+                const map = new Map()
+                for (const [key, b] of Object.entries(data)) {
+                    map.set(key, b)
+                }
+                setBackends(map)
+            } catch {
+                // Non-critical — silently ignore
+            }
+        })()
+    }, [])
+
+    const value = useMemo(() => ({ data, selected, setSelected, loading, progress, filter, setFilter, toggleFilter, backends }), [data, selected, loading, progress, filter, toggleFilter, backends])
 
     if (!loading && error) {
         return (

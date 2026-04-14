@@ -150,6 +150,18 @@ table {
     cursor: pointer;
 }
 
+.tier-badge {
+    display: inline-block;
+    font-size: 0.7em;
+    font-weight: 600;
+    padding: 1px 5px;
+    margin-left: 5px;
+    border-radius: 8px;
+    text-decoration: none;
+    vertical-align: middle;
+    line-height: 1.4;
+}
+
 .expand-more {
     cursor: pointer;
     color: #646cff;
@@ -206,6 +218,11 @@ table {
     background-color: #2b2b2b;
     color: #fff;
   }
+  .tier-1 { background: #2e9e5e; color: #111; }
+  .tier-2 { background: #5bbe80; color: #111; }
+  .tier-3 { background: #f5a623; color: #111; }
+  .tier-4 { background: #b366f0; color: #111; }
+  .tier-5 { background: #777;    color: #eee; }
 }
 
 @media (prefers-color-scheme: light) {
@@ -221,4 +238,9 @@ table {
     background-color: #f9f9f9;
     color: #000;
   }
+  .tier-1 { background: #0d8043; color: #fff; }
+  .tier-2 { background: #2e9e5e; color: #fff; }
+  .tier-3 { background: #e8710a; color: #fff; }
+  .tier-4 { background: #9334e6; color: #fff; }
+  .tier-5 { background: #999;    color: #fff; }
 }

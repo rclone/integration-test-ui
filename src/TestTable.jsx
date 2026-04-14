@@ -1,5 +1,6 @@
 import { useData } from './DataContext'
 import ExpandableList from './ExpandableList'
+import TierBadge from './TierBadge'
 
 // Reusable table for displaying failed test rows with optional filtering
 function matchesFilter(item, filter) {
@@ -8,7 +9,7 @@ function matchesFilter(item, filter) {
 }
 
 export default function TestTable({ tests, variant }) {
-    const { selected, filter, toggleFilter } = useData()
+    const { selected, filter, toggleFilter, backends } = useData()
     const styling = (value) => (filter && value === filter ? "selected" : "unselected")
     const filtered = filter ? tests.filter(item => matchesFilter(item, filter)) : tests
 
@@ -27,7 +28,10 @@ export default function TestTable({ tests, variant }) {
             <tbody>
                 {filtered.map((item, i) => (
                     <tr key={i}>
-                        <td onClick={() => toggleFilter(item.Backend)}><span className={styling(item.Backend)}>{item.Backend}</span></td>
+                        <td onClick={() => toggleFilter(item.Backend)}>
+                            <span className={styling(item.Backend)}>{item.Backend}</span>
+                            {backends?.get(item.Backend) && <TierBadge tier={backends.get(item.Backend).tier} />}
+                        </td>
                         <td onClick={() => toggleFilter(item.Remote)}><span className={styling(item.Remote)}>{item.Remote}</span></td>
                         <td onClick={() => toggleFilter(item.Path)}><span className={styling(item.Path)}>{item.Path}</span></td>
                         <td onClick={() => toggleFilter(String(item.FastList))}><span className={styling(String(item.FastList))}>{String(item.FastList)}</span></td>
