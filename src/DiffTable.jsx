@@ -18,7 +18,13 @@ function compare(oldReport, newReport) {
     const newF = failedSet(newReport)
 
     const regressed = [...newF.values()].filter(t => !oldF.has(key(t)))
-    const fixed = [...oldF.values()].filter(t => !newF.has(key(t)))
+    // fixed tests come from the old report, so take the log names from
+    // the matching passed test in the new report as the logs are linked
+    // to the new report's directory
+    const newP = new Map((newReport.Passed || []).map(t => [key(t), t]))
+    const fixed = [...oldF.values()]
+        .filter(t => !newF.has(key(t)))
+        .map(t => ({ ...t, TrialNames: newP.get(key(t))?.TrialNames ?? [] }))
     const continued = [...newF.values()].filter(t => oldF.has(key(t)))
 
     return { regressed, fixed, continued }
