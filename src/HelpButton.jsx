@@ -22,6 +22,7 @@ export default function HelpButton() {
                             <li>Navigate integration test history with tabs or with <kbd>←</kbd> and <kbd>→</kbd> keys.</li>
                             <li>Filters stay active when switching dates.</li>
                             <li>Current filter and date are stored in URL for link sharing.</li>
+                            <li>Click ⊘ to ignore a failing row until it next passes. Ignored rows appear as chips below the table; click a chip to unignore. Ignores are stored in this browser.</li>
                             <li>Regressed: passed last run, failed this run.</li>
                             <li>Continued failed: failed both runs.</li>
                             <li>Fixed: failed last run, passed this run.</li>

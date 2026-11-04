@@ -1,6 +1,8 @@
 import { useData } from './DataContext'
 import ExpandableList from './ExpandableList'
 import TierBadge from './TierBadge'
+import IgnoredChips from './IgnoredChips'
+import { ignoreKey, splitIgnored } from './ignored'
 
 // Reusable table for displaying failed test rows with optional filtering
 function matchesFilter(item, filter) {
@@ -8,12 +10,16 @@ function matchesFilter(item, filter) {
         || (item.FailedTests ?? []).includes(filter)
 }
 
-export default function TestTable({ tests, variant }) {
-    const { selected, filter, toggleFilter, backends } = useData()
+// If ignorable is set, ignored rows are shown as chips below the table
+// and each row gets a button to ignore it.
+export default function TestTable({ tests, variant, ignorable }) {
+    const { selected, filter, toggleFilter, backends, ignored, ignore } = useData()
     const styling = (value) => (filter && value === filter ? "selected" : "unselected")
-    const filtered = filter ? tests.filter(item => matchesFilter(item, filter)) : tests
+    const matching = filter ? tests.filter(item => matchesFilter(item, filter)) : tests
+    const [filtered, ignoredRows] = ignorable ? splitIgnored(matching, ignored) : [matching, []]
 
     return (
+        <>
         <table className={variant ? `table-${variant}` : ""}>
             <thead>
                 <tr>
@@ -23,11 +29,12 @@ export default function TestTable({ tests, variant }) {
                     <th>FastList</th>
                     <th>Failed</th>
                     <th>Logs</th>
+                    {ignorable && <th></th>}
                 </tr>
             </thead>
             <tbody>
-                {filtered.map((item, i) => (
-                    <tr key={i}>
+                {filtered.map(item => (
+                    <tr key={ignoreKey(item)}>
                         <td onClick={() => toggleFilter(item.Backend)}>
                             <span className={styling(item.Backend)}>{item.Backend}</span>
                             {backends?.get(item.Backend) && <TierBadge tier={backends.get(item.Backend).tier} />}
@@ -55,9 +62,21 @@ export default function TestTable({ tests, variant }) {
                                 </a>
                             ))}
                         </td>
+                        {ignorable && (
+                            <td className="ignore-cell">
+                                <span
+                                    className="ignore-btn"
+                                    role="button"
+                                    title="Ignore until it passes"
+                                    onClick={() => ignore(item)}
+                                >⊘</span>
+                            </td>
+                        )}
                     </tr>
                 ))}
             </tbody>
         </table>
+        {ignorable && <IgnoredChips items={ignoredRows} />}
+        </>
     )
 }

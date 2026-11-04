@@ -1,10 +1,11 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import { useData } from './DataContext'
 import TestTable from './TestTable'
+import { splitIgnored } from './ignored'
 
 // component to display and allow filtering of failed tests
 export default function FailedTests() {
-    const { data, selected, setSelected, filter, setFilter } = useData();
+    const { data, selected, setSelected, filter, setFilter, ignored } = useData();
     const [ready, setReady] = useState(false)
 
     useLayoutEffect(() => {
@@ -45,17 +46,18 @@ export default function FailedTests() {
     if (!data || !selected) return null
 
     const failed = selected.Failed || []
+    const [visible, hidden] = splitIgnored(failed, ignored)
 
     return (
         <>
-            <h2>Failed Tests: {failed.length}</h2>
+            <h2>Failed Tests: {visible.length}{hidden.length > 0 && ` (${hidden.length} ignored)`}</h2>
             <p className="unselected" onClick={() => setFilter("")}>
                 current filter:
                 <span className={filter ? "selected" : ""}>
                     {filter !== "" ? " " + filter : " none"}
                 </span>
             </p>
-            <TestTable tests={failed} variant="failed" />
+            <TestTable tests={failed} variant="failed" ignorable />
         </>
     )
 }

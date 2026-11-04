@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { ConfigProvider, message, notification, theme } from 'antd';
+import { STORAGE_KEY, ignoreKey, ignoreLabel, loadIgnored, saveIgnored, pruneIgnored, newestDateTime } from './ignored';
 
 const DataContext = createContext();
 const URL = "https://pub.rclone.org/integration-tests/"
@@ -29,6 +31,10 @@ export function DataProvider({ children }) {
     const [filter, setFilter] = useState("")
     const toggleFilter = useCallback(v => setFilter(prev => prev === v ? "" : v), [])
     const [backends, setBackends] = useState(null)
+    const [ignored, setIgnored] = useState(loadIgnored)
+    const [cleared, setCleared] = useState([])
+    const [messageApi, messageHolder] = message.useMessage()
+    const [notificationApi, notificationHolder] = notification.useNotification()
 
     // fetch json test data from subdirectories in listing
     useEffect(() => {
@@ -64,6 +70,11 @@ export function DataProvider({ children }) {
                     return
                 }
 
+                // drop ignores for rows which have since passed
+                const pruned = pruneIgnored(loadIgnored(), results)
+                setIgnored(pruned.items)
+                setCleared(pruned.cleared)
+
                 setData(results)
                 setSelected(results[results.length - 1])
             } finally {
@@ -89,7 +100,61 @@ export function DataProvider({ children }) {
         })()
     }, [])
 
-    const value = useMemo(() => ({ data, selected, setSelected, loading, progress, filter, setFilter, toggleFilter, backends }), [data, selected, loading, progress, filter, toggleFilter, backends])
+    // persist ignores and keep them in sync with other tabs
+    useEffect(() => saveIgnored(ignored), [ignored])
+    useEffect(() => {
+        const handler = (e) => { if (e.key === STORAGE_KEY) setIgnored(loadIgnored()) }
+        window.addEventListener("storage", handler)
+        return () => window.removeEventListener("storage", handler)
+    }, [])
+
+    // tell the user about ignores removed because the tests passed
+    useEffect(() => {
+        if (cleared.length === 0) return
+        notificationApi.info({
+            key: "ignores-cleared",
+            message: `${cleared.length} ignore${cleared.length === 1 ? "" : "s"} cleared because the test${cleared.length === 1 ? "" : "s"} passed`,
+            description: cleared.map(t => <div key={ignoreKey(t)}>{ignoreLabel(t)}</div>),
+            duration: 0,
+        })
+    }, [cleared, notificationApi])
+
+    // set or remove (entry == null) the ignore for key k
+    const setIgnoreEntry = useCallback((k, entry) => {
+        setIgnored(prev => {
+            const next = { ...prev }
+            if (entry) next[k] = entry; else delete next[k]
+            return next
+        })
+    }, [])
+
+    // ignore test t, offering undo
+    const ignore = useCallback(t => {
+        const k = ignoreKey(t)
+        setIgnoreEntry(k, { since: newestDateTime(data), at: Date.now() })
+        messageApi.open({
+            key: k,
+            type: "info",
+            duration: 6,
+            content: <span>Ignored {ignoreLabel(t)} until it passes. <a onClick={() => { setIgnoreEntry(k, null); messageApi.destroy(k) }}>Undo</a></span>,
+        })
+    }, [data, messageApi, setIgnoreEntry])
+
+    // unignore test t, offering undo
+    const unignore = useCallback(t => {
+        const k = ignoreKey(t)
+        const old = ignored[k]
+        if (!old) return
+        setIgnoreEntry(k, null)
+        messageApi.open({
+            key: k,
+            type: "info",
+            duration: 6,
+            content: <span>Unignored {ignoreLabel(t)}. <a onClick={() => { setIgnoreEntry(k, old); messageApi.destroy(k) }}>Undo</a></span>,
+        })
+    }, [ignored, messageApi, setIgnoreEntry])
+
+    const value = useMemo(() => ({ data, selected, setSelected, loading, progress, filter, setFilter, toggleFilter, backends, ignored, ignore, unignore }), [data, selected, loading, progress, filter, toggleFilter, backends, ignored, ignore, unignore])
 
     if (!loading && error) {
         return (
@@ -110,7 +175,16 @@ export function DataProvider({ children }) {
             </div>
         );
     }
-    return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
+    const dark = window.matchMedia?.("(prefers-color-scheme: dark)").matches
+    return (
+        <DataContext.Provider value={value}>
+            <ConfigProvider theme={{ algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
+                {messageHolder}
+                {notificationHolder}
+            </ConfigProvider>
+            {children}
+        </DataContext.Provider>
+    );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

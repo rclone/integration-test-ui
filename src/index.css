@@ -244,3 +244,70 @@ table {
   .tier-4 { background: #9334e6; color: #fff; }
   .tier-5 { background: #999;    color: #fff; }
 }
+
+.ignore-cell {
+    text-align: center;
+    padding: 6px 6px;
+}
+
+.ignore-btn {
+    cursor: pointer;
+    opacity: 0.2;
+    transition: opacity 0.15s;
+    font-size: 1.1em;
+}
+tr:hover .ignore-btn {
+    opacity: 0.7;
+}
+.ignore-btn:hover {
+    opacity: 1 !important;
+}
+
+.ignored-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+.ignored-chips:hover {
+    opacity: 1;
+}
+
+.ignored-label {
+    margin-right: 2px;
+}
+
+.ignored-chip {
+    cursor: pointer;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid #888;
+    white-space: nowrap;
+    line-height: 1.6;
+}
+.ignored-chip .chip-x {
+    opacity: 0.5;
+}
+.ignored-chip:hover {
+    border-color: #c33;
+    color: #c33;
+}
+.ignored-chip:hover .chip-x {
+    opacity: 1;
+}
+.ignored-more {
+    border-style: dashed;
+}
+
+.chip-meta {
+    margin-top: 4px;
+    opacity: 0.75;
+    font-style: italic;
+}
+
+.ignored-tooltip {
+    max-width: 600px;
+}
